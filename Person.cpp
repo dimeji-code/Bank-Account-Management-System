@@ -7,8 +7,8 @@ Person::Person(std::string personName){
 }
 
 Person::~Person(){
-    std::cout << "Destroyed Person Data" << std::endl;
-    std::cout << "Destroyed Person Data" << std::endl;
+    std::cout << "\nDe-allocate Person Data" << std::endl;
+    std::cout << "De-allocate Memory\n" << std::endl;
 }
 
 void Person::setName(std::string personName){
@@ -30,6 +30,10 @@ void Person::setAccount(std::string personName,std::string acctName,std::string 
 std::string Person::getName(){
     
     return this->name;
+}
+
+Account* ( Person::getAccounts()){
+    return *accounts;
 }
 
 void Person::printAccounts(){

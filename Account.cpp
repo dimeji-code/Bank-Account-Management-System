@@ -16,7 +16,6 @@ void Account::setDetails( std::string accountName,std::string accountNum, float 
 }
 
 std::string Account::getAccountNo(){
-
     return accountNo;
 }
 

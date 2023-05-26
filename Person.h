@@ -10,6 +10,7 @@ class Person{
         void setAccount(std::string,std::string,std::string,float);
         std::string getName();
         void printAccounts();
+        Account *(getAccounts());
         int getNumAccounts();
         bool accountExists(std::string );
         void deposit(std::string,float);

@@ -4,7 +4,7 @@
 #include "Person.h"
 // run code with g++ proj.cpp Account.cpp Person.cpp
 // then ./a.out
-
+//or ./a.out < test.txt
 
 //main menu
 void menu(){
@@ -34,61 +34,164 @@ void checkBalance(Person *me){
 }
 
 //make a deposit
+//void deposit(Person *me){
+//     if(me->getNumAccounts() < 1){
+//         std::cout<< "You must have at least 1 account to make a deposit!\nBack to MAIN MENU." << std::endl;
+//     } else{
+//         bool found = false;
+//         std::string accNo;
+//         std::cout<< "\nAccounts"<<std::endl;
+//         me->printAccounts();
+//         //loop till account number found
+//         while(!found){
+//             std::cout<< "\nType the account number:"<<std::endl;
+//             std::cin >> accNo ;
+//         (me->accountExists(accNo) == true )? (found = true) : (std::cout<<"Account Does NOT exist"<<std::endl); 
+//         }
+//         float amount;
+//         std::cout<< "\nEnter Amount to deposit:  $";
+//         std::cin >> amount;
+//         me->deposit(accNo,amount);
+//     }
+// }
+
 void deposit(Person *me){
 
     if(me->getNumAccounts() < 1){
         std::cout<< "You must have at least 1 account to make a deposit!\nBack to MAIN MENU." << std::endl;
     } else{
         bool found = false;
-        std::string accNo;
+        int accNo;
 
         std::cout<< "\nAccounts"<<std::endl;
         me->printAccounts();
 
         //loop till account number found
         while(!found){
-            std::cout<< "\nType the account number:"<<std::endl;
+            std::cout<< "\nSelect the account [ 1 - 3 ]:"<<std::endl;
             std::cin >> accNo ;
-        (me->accountExists(accNo) == true )? (found = true) : (std::cout<<"Account Does NOT exist"<<std::endl); 
-        }
+            //make sure input is of the correct type
+            while (!std::cin.good())
+            {
+                std::cin.clear(); 
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
+                std::cout<< "\nSelect the account [ 1 - 3 ]:"<<std::endl;
+                std::cin >> accNo ;
+
+            }  
+
+            //make sure that the input meets the possible requirements
+            (accNo <= me->getNumAccounts() )? (found = true) : (std::cout<<"Account Does NOT exist"<<std::endl); 
+
+        }
+        Account* x = me->getAccounts();
+        //find the account by incrementing the pointer/array
+        for(int i=0; i< accNo-1; i++){
+            ++x;
+        }
         float amount;
         std::cout<< "\nEnter Amount to deposit:  $";
         std::cin >> amount;
-        me->deposit(accNo,amount);
+        //deposit the amount in the account
+        me->deposit(x->getAccountNo(),amount);
     }
-
-
-
 }
+
 //make transfer between accounts
+// void transfer(Person *me){
+//     //make sure atleast 2 accounts exist
+//     if(me->getNumAccounts() <= 1){
+//         std::cout<< "You must have at least two accounts to transfer between!\nBack to MAIN MENU." << std::endl;
+//     } else{
+//         std::string from, to;
+//         bool verified = false;
+//         checkBalance(me);
+//         //loop account number entry until gotten right
+//         while (!verified){
+//             std::cout<<"Enter account to transfer FROM"<<std::endl;
+//             std::cin >> from;
+//             (me->accountExists(from) == true )? verified = true: std::cout<<"Wrong Account Number Entered!"<<std::endl;
+//         }
+//         verified = false;
+//         //loop account number entry until gotten right
+//         while (!verified){
+//             std::cout<<"Enter account to transfer TO"<<std::endl;
+//             std::cin >> to;
+//             (me->accountExists(to) == true )? verified = true: std::cout<<"Wrong Account Number Entered!"<<std::endl;
+//         }
+//         me->transfer(from, to);
+//     }
+// }
+
 void transfer(Person *me){
     //make sure atleast 2 accounts exist
     if(me->getNumAccounts() <= 1){
         std::cout<< "You must have at least two accounts to transfer between!\nBack to MAIN MENU." << std::endl;
     } else{
-        std::string from, to;
+        int from, to;
         bool verified = false;
         checkBalance(me);
 
 
         //loop account number entry until gotten right
         while (!verified){
-            std::cout<<"Enter account to transfer FROM"<<std::endl;
+            std::cout<<"Enter account (1, 2 or 3) to transfer FROM"<<std::endl;
             std::cin >> from;
-            (me->accountExists(from) == true )? verified = true: std::cout<<"Wrong Account Number Entered!"<<std::endl;
+            while (!std::cin.good())
+            {
+                std::cin.clear(); 
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                std::cout<< "Enter account (1, 2 or 3) to transfer FROM"<<std::endl;
+                std::cin >> from ;
+
+            }  
+            (from <= me->getNumAccounts() && from > 0  )? (verified = true) : (std::cout<<"Account Does NOT exist"<<std::endl); 
         }
 
         verified = false;
 
         //loop account number entry until gotten right
         while (!verified){
-            std::cout<<"Enter account to transfer TO"<<std::endl;
+            std::cout<<"Enter account (1, 2 or 3) to transfer TO"<<std::endl;
             std::cin >> to;
-            (me->accountExists(to) == true )? verified = true: std::cout<<"Wrong Account Number Entered!"<<std::endl;
+            while (!std::cin.good())
+            {
+                std::cin.clear(); 
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                std::cout<< "Enter account (1, 2 or 3) to transfer TO"<<std::endl;
+                std::cin >> to ;
+
+            }  
+            (to <= me->getNumAccounts() && to > 0 )? (verified = true) : (std::cout<<"Account Does NOT exist"<<std::endl); 
         }
 
-        me->transfer(from, to);
+        Account *b = me->getAccounts();
+        Account *c = me->getAccounts();
+            // std::cout<< "INITIAL address: "<< me->getAccounts() << std::endl;
+            // std::cout<< "C in: "<< &b << std::endl;
+            // std::cout<< "B in: "<< &c << std::endl;
+            // std::cout<< "--------------------------"<<std::endl;
+
+        std::string fromNo, toNo;
+        for(int i=0; i< from-1; i++){
+            ++b;
+            // std::cout<< "IN B pointer is: "<< &b << std::endl;
+            // std::cout<< "C pointer is: "<< &c << std::endl;
+        }
+        fromNo = b->getAccountNo();
+        for(int i=0; i< to-1; i++){
+            ++c;
+            // std::cout<< "B pointer is: "<< &b << std::endl;
+            // std::cout<< "IN C pointer is: "<< &c << std::endl;
+        }
+        toNo = c->getAccountNo();
+        // std::cout<< "B ACC # : "<< fromNo << std::endl;
+        // std::cout<< "C ACC # : "<< toNo << std::endl;
+
+        me->transfer(fromNo, toNo);
     }
 }
 
@@ -108,64 +211,144 @@ void createAccount(Person *me){
                 break;
             }
         }
-        me->setAccount(myName,accType,randomId(),0.00);
-        
+        me->setAccount(myName,accType,randomId(),0.00);   
+}
+
+void testInt(int actual, int expected,std::string testName){
+    std::cout<< testName <<std::endl;       
+    std::cout<<"\tActual Value: "<< actual<< "\n\tExpected Value: "<< expected<<std::endl;
+
+    if(actual != expected){
+        std::cout<<"\t --------"<<std::endl;
+        std::cout<<"\t| Failed |"<<std::endl;
+        std::cout<<"\t --------"<<std::endl;
+    }else{
+        std::cout<<"\t\t ---------" <<std::endl;
+        std::cout<<"\t\t| Passed! |" <<std::endl;
+        std::cout<<"\t\t ---------\n" <<std::endl;
+    }
+}
+
+void testString(std::string actual, std::string expected,std::string testName){
+    std::cout<< testName <<std::endl;       
+    std::cout<<"\tActual Value: "<< actual<< "\n\tExpected Value: "<< expected<<std::endl;
+
+    if(actual != expected){
+        std::cout<<"\t --------"<<std::endl;
+        std::cout<<"\t| Failed |"<<std::endl;
+        std::cout<<"\t --------"<<std::endl;
+    }else{
+        std::cout<<"\t\t ---------" <<std::endl;
+        std::cout<<"\t\t| Passed! |" <<std::endl;
+        std::cout<<"\t\t ---------\n" <<std::endl;
+    }
+}
+
+void testFunction(){
+    //Generic testing for dynamic allocation and setting accounts
+    std::cout<<" ------"<<std::endl;
+    std::cout<<"| Test |"<<std::endl;
+    std::cout<<" ------"<<std::endl;
+    Person *testPerson = new Person("Tester");
+    testString(testPerson->getName(),"Tester","Test 1\nReturn created person name: 'Tester' !");
+    testInt(testPerson->getNumAccounts(),0,"Test 2\nReturn the number of Accounts Tester has!");
+    
+    testPerson->setAccount("Tester","Chequing",randomId(),0.00);
+    std::cout<<" --------------------------------------------"<<std::endl;
+    std::cout<<"| Just Created a Chequing account for Tester |"<<std::endl;
+    std::cout<<" --------------------------------------------\n"<<std::endl;
+    testInt(testPerson->getNumAccounts(),1,"Test 3\nReturn the number of Accounts Tester has!");
+    
+    testPerson->setAccount("Tester","Savings",randomId(),0.00);
+    std::cout<<" -------------------------------------------"<<std::endl;
+    std::cout<<"| Just Created a Savings account for Tester |"<<std::endl;
+    std::cout<<" -------------------------------------------\n"<<std::endl;
+    testInt(testPerson->getNumAccounts(),2,"Test 4\nReturn the number of Accounts Tester has!");
+
+    Account* a = testPerson->getAccounts();
+    testPerson->deposit(a->getAccountNo(),50);
+    std::cout<<" ----------------------------"<<std::endl;
+    std::cout<<"| Deposit $50 in account (1) |"<<std::endl;
+    std::cout<<" ----------------------------\n"<<std::endl;
+    testInt(a->getAccountBalance(),50,"Test 5\nReturn an account balance of $50!");
+
+    ++a;
+    testPerson->deposit(a->getAccountNo(),10);
+    std::cout<<" ----------------------------"<<std::endl;
+    std::cout<<"| Deposit $10 in account (2) |"<<std::endl;
+    std::cout<<" ----------------------------\n"<<std::endl;
+    testInt(a->getAccountBalance(),10,"Test 6\nReturn an account balance of $10!");
+
+    checkBalance(testPerson);
+
+
+    std::cout<<"End of Test"<<std::endl;
+    delete testPerson;
 }
 
 int main(){
-    srand(time(0));
+    int mode;
 
-    std::string myName;
-    std::cout << "Please enter your name"<<std::endl;
-    std::cin>> myName ;
-    std::system("clear");
+    std::cout << "Welcome to Bank Account Simulator.\nPress (1) to run Test or\nPress (2) to run program manually."<<std::endl;
+    std::cin>> mode ; 
+    // if (std::stoi(mode) == 1) {testFunction();}
+    if (mode == 1) {testFunction();}
 
+    else{
+        srand(time(0));
 
-    Person *p1 = new Person(myName);
-    
-    int selection;
-    bool state = true;
-    std::cout <<"\nHello "<<p1->getName() <<"!!! \nWelcome to Standard Bank.\nThe Greenest Bank in the world.\n"<<std::endl;
-
-
-    while (state == true){
-        std::cout<<"Select an option by typing the Number then hit ENTER."<<std::endl;
-        menu();
-        std::cin>> selection ;
-        //switch case main menu
-        switch(selection){
-            case 1: 
-                if (p1->getNumAccounts() == 3 ){
-                    std::cout<< "\nSorry :( \nYou have reached the MAXIMUM # of accounts"<<std::endl;
-                }else{
-                    createAccount(p1);
-
-                }
-                break;
-            case 2: 
-                checkBalance(p1);
- 
-                break;
-            case 3: 
-                deposit(p1);
-                break;
-            case 4: 
-                transfer(p1);
-                break;
-
-
-        }
-        std::string str;
-        std::cout<<"Would you like to exit program? Y or N."<<std::endl;
-        std::cin >> str;
+        std::string myName;
+        std::cout << "Please enter your name"<<std::endl;
+        std::cin>> myName ;
         std::system("clear");
 
-        if (str == "Y" || str == "y" || str == "yes" || str == "Yes"){
-            std::cout <<"\nGoodbye "<<p1->getName() <<" and Thank you for using Standard Bank.\n"<<std::endl;
-            state = false;
+
+        Person *p1 = new Person(myName);
+        
+        int selection;
+        bool state = true;
+        std::cout <<"\nHello "<<p1->getName() <<"!!! \nWelcome to Standard Bank.\nThe Greenest Bank in the world.\n"<<std::endl;
+
+
+        while (state == true){
+            std::cout<<"Select an option by typing the Number then hit ENTER."<<std::endl;
+            menu();
+            std::cin>> selection ;
+            //switch case main menu
+            switch(selection){
+                case 1: 
+                    if (p1->getNumAccounts() == 3 ){
+                        std::cout<< "\nSorry :( \nYou have reached the MAXIMUM # of accounts"<<std::endl;
+                    }else{
+                        createAccount(p1);
+
+                    }
+                    break;
+                case 2: 
+                    checkBalance(p1);
+    
+                    break;
+                case 3: 
+                    deposit(p1);
+                    break;
+                case 4: 
+                    transfer(p1);
+                    break;
+
+
+            }
+            std::string str;
+            std::cout<<"Would you like to exit program? Y or N."<<std::endl;
+            std::cin >> str;
+            std::system("clear");
+
+            if (str == "Y" || str == "y" || str == "yes" || str == "Yes"){
+                std::cout <<"\nGoodbye "<<p1->getName() <<" and Thank you for using Standard Bank.\n"<<std::endl;
+                state = false;
+
+            }
 
         }
-
     }
 
     return 0;
