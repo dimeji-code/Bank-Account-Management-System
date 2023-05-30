@@ -5,6 +5,7 @@
 // run code with g++ proj.cpp Account.cpp Person.cpp
 // then ./a.out
 //or ./a.out < test.txt
+//test colors specified with ANSI color codes
 
 //main menu
 void menu(){
@@ -34,7 +35,7 @@ void checkBalance(Person *me){
 }
 
 //make a deposit
-//void deposit(Person *me){
+// void deposit(Person *me){
 //     if(me->getNumAccounts() < 1){
 //         std::cout<< "You must have at least 1 account to make a deposit!\nBack to MAIN MENU." << std::endl;
 //     } else{
@@ -83,13 +84,9 @@ void deposit(Person *me){
 
             //make sure that the input meets the possible requirements
             (accNo <= me->getNumAccounts() )? (found = true) : (std::cout<<"Account Does NOT exist"<<std::endl); 
+        }
+        Account* x = me->getAccount(accNo-1);
 
-        }
-        Account* x = me->getAccounts();
-        //find the account by incrementing the pointer/array
-        for(int i=0; i< accNo-1; i++){
-            ++x;
-        }
         float amount;
         std::cout<< "\nEnter Amount to deposit:  $";
         std::cin >> amount;
@@ -98,7 +95,7 @@ void deposit(Person *me){
     }
 }
 
-//make transfer between accounts
+// make transfer between accounts
 // void transfer(Person *me){
 //     //make sure atleast 2 accounts exist
 //     if(me->getNumAccounts() <= 1){
@@ -124,6 +121,7 @@ void deposit(Person *me){
 //     }
 // }
 
+// make transfer between accounts
 void transfer(Person *me){
     //make sure atleast 2 accounts exist
     if(me->getNumAccounts() <= 1){
@@ -132,8 +130,6 @@ void transfer(Person *me){
         int from, to;
         bool verified = false;
         checkBalance(me);
-
-
         //loop account number entry until gotten right
         while (!verified){
             std::cout<<"Enter account (1, 2 or 3) to transfer FROM"<<std::endl;
@@ -142,16 +138,12 @@ void transfer(Person *me){
             {
                 std::cin.clear(); 
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
                 std::cout<< "Enter account (1, 2 or 3) to transfer FROM"<<std::endl;
                 std::cin >> from ;
-
             }  
             (from <= me->getNumAccounts() && from > 0  )? (verified = true) : (std::cout<<"Account Does NOT exist"<<std::endl); 
         }
-
         verified = false;
-
         //loop account number entry until gotten right
         while (!verified){
             std::cout<<"Enter account (1, 2 or 3) to transfer TO"<<std::endl;
@@ -160,36 +152,18 @@ void transfer(Person *me){
             {
                 std::cin.clear(); 
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
                 std::cout<< "Enter account (1, 2 or 3) to transfer TO"<<std::endl;
                 std::cin >> to ;
-
             }  
             (to <= me->getNumAccounts() && to > 0 )? (verified = true) : (std::cout<<"Account Does NOT exist"<<std::endl); 
         }
-
-        Account *b = me->getAccounts();
-        Account *c = me->getAccounts();
-            // std::cout<< "INITIAL address: "<< me->getAccounts() << std::endl;
-            // std::cout<< "C in: "<< &b << std::endl;
-            // std::cout<< "B in: "<< &c << std::endl;
-            // std::cout<< "--------------------------"<<std::endl;
+        //subtract 1 from value to get index
+        Account *b = me->getAccount(from-1);
+        Account *c = me->getAccount(to-1);
 
         std::string fromNo, toNo;
-        for(int i=0; i< from-1; i++){
-            ++b;
-            // std::cout<< "IN B pointer is: "<< &b << std::endl;
-            // std::cout<< "C pointer is: "<< &c << std::endl;
-        }
         fromNo = b->getAccountNo();
-        for(int i=0; i< to-1; i++){
-            ++c;
-            // std::cout<< "B pointer is: "<< &b << std::endl;
-            // std::cout<< "IN C pointer is: "<< &c << std::endl;
-        }
         toNo = c->getAccountNo();
-        // std::cout<< "B ACC # : "<< fromNo << std::endl;
-        // std::cout<< "C ACC # : "<< toNo << std::endl;
 
         me->transfer(fromNo, toNo);
     }
@@ -219,13 +193,13 @@ void testInt(int actual, int expected,std::string testName){
     std::cout<<"\tActual Value: "<< actual<< "\n\tExpected Value: "<< expected<<std::endl;
 
     if(actual != expected){
-        std::cout<<"\t --------"<<std::endl;
-        std::cout<<"\t| Failed |"<<std::endl;
-        std::cout<<"\t --------"<<std::endl;
+        std::cout<< "\e[0;31m" <<"\t --------"<< "\E[0m"<<std::endl;
+        std::cout<< "\e[0;31m" <<"\t| Failed |"<< "\E[0m"<<std::endl;
+        std::cout<< "\e[0;31m" <<"\t --------"<< "\E[0m"<<std::endl;
     }else{
-        std::cout<<"\t\t ---------" <<std::endl;
-        std::cout<<"\t\t| Passed! |" <<std::endl;
-        std::cout<<"\t\t ---------\n" <<std::endl;
+        std::cout<< "\E[22;32m" <<"\t\t ---------"<< "\E[0m" <<std::endl;
+        std::cout<< "\E[22;32m" <<"\t\t| Passed! |"<< "\E[0m" <<std::endl;
+        std::cout<< "\E[22;32m" <<"\t\t ---------\n"<< "\E[0m" <<std::endl;
     }
 }
 
@@ -234,21 +208,22 @@ void testString(std::string actual, std::string expected,std::string testName){
     std::cout<<"\tActual Value: "<< actual<< "\n\tExpected Value: "<< expected<<std::endl;
 
     if(actual != expected){
-        std::cout<<"\t --------"<<std::endl;
-        std::cout<<"\t| Failed |"<<std::endl;
-        std::cout<<"\t --------"<<std::endl;
+        std::cout<< "\e[0;31m" <<"\t ---------"<< "\E[0m"<<std::endl;
+        std::cout<< "\e[0;31m" <<"\t| Failed! |"<< "\E[0m"<<std::endl;
+        std::cout<< "\e[0;31m" <<"\t ---------"<< "\E[0m"<<std::endl;
     }else{
-        std::cout<<"\t\t ---------" <<std::endl;
-        std::cout<<"\t\t| Passed! |" <<std::endl;
-        std::cout<<"\t\t ---------\n" <<std::endl;
+        std::cout<< "\E[22;32m" <<"\t\t ---------"<< "\E[0m" <<std::endl;
+        std::cout<<"\E[22;32m" <<"\t\t| Passed! |"<< "\E[0m" <<std::endl;
+        std::cout<<"\E[22;32m" <<"\t\t ---------\n"<< "\E[0m" <<std::endl;
     }
 }
 
 void testFunction(){
     //Generic testing for dynamic allocation and setting accounts
-    std::cout<<" ------"<<std::endl;
-    std::cout<<"| Test |"<<std::endl;
-    std::cout<<" ------"<<std::endl;
+    std::cout << "\e[0;34m" <<" ------"<<std::endl;
+    std::cout  <<"| TEST |"<<std::endl;
+    std::cout  <<" ------"<< "\E[0m" <<std::endl;
+
     Person *testPerson = new Person("Tester");
     testString(testPerson->getName(),"Tester","Test 1\nReturn created person name: 'Tester' !");
     testInt(testPerson->getNumAccounts(),0,"Test 2\nReturn the number of Accounts Tester has!");
@@ -264,15 +239,19 @@ void testFunction(){
     std::cout<<"| Just Created a Savings account for Tester |"<<std::endl;
     std::cout<<" -------------------------------------------\n"<<std::endl;
     testInt(testPerson->getNumAccounts(),2,"Test 4\nReturn the number of Accounts Tester has!");
+    checkBalance(testPerson);
 
-    Account* a = testPerson->getAccounts();
+    Account *a = testPerson->getAccount(0);
     testPerson->deposit(a->getAccountNo(),50);
     std::cout<<" ----------------------------"<<std::endl;
     std::cout<<"| Deposit $50 in account (1) |"<<std::endl;
     std::cout<<" ----------------------------\n"<<std::endl;
     testInt(a->getAccountBalance(),50,"Test 5\nReturn an account balance of $50!");
+    checkBalance(testPerson);
+  
+    a = testPerson->getAccount(1);
 
-    ++a;
+    std::cout<<" deposit 10 $ to -> "<<a->getAccountNo()<<std::endl;
     testPerson->deposit(a->getAccountNo(),10);
     std::cout<<" ----------------------------"<<std::endl;
     std::cout<<"| Deposit $10 in account (2) |"<<std::endl;
@@ -281,12 +260,13 @@ void testFunction(){
 
     checkBalance(testPerson);
 
-
     std::cout<<"End of Test"<<std::endl;
+    delete a;
     delete testPerson;
 }
 
 int main(){
+
     int mode;
 
     std::cout << "Welcome to Bank Account Simulator.\nPress (1) to run Test or\nPress (2) to run program manually."<<std::endl;

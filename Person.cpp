@@ -32,8 +32,12 @@ std::string Person::getName(){
     return this->name;
 }
 
-Account* ( Person::getAccounts()){
+Account*  Person::getAccounts(){
     return *accounts;
+}
+Account * Person::getAccount(int index){
+    return accounts[index];
+    
 }
 
 void Person::printAccounts(){
@@ -44,6 +48,7 @@ void Person::printAccounts(){
         }else{
             std::cout <<"Account "<< i+1 << " -> "<< this->accounts[i]->getAccountNo()<<std::endl;
             std::cout <<"\tBalance is $"<< this->accounts[i]->getAccountBalance()<< "\n"<<std::endl;
+            // std::cout <<"\tmemory address& => "<< &this->accounts[i]<< "\n"<<std::endl;
         }
 
     }
@@ -65,21 +70,17 @@ bool Person::accountExists(std::string account){
 }
 
 void Person::deposit(std::string account,float dep ){
-    Account *curr;
-    for(int i=0; i<  (sizeof(accounts)/sizeof(*accounts))  ;i++){
-         if( this->accounts[i] == NULL){
-            // do nothing
-        }
-        else if( this->accounts[i]->getAccountNo() == account){
-            std::cout <<"Account Exists"<<std::endl;
-            curr = this->accounts[i];
-            std::cout << this->accounts[i] << std::endl;
-            std::cout << curr << std::endl;
-            curr->addToBalance(dep);
+    for(int i=0; i<  numAccounts  ;i++){
+
+         if( this->accounts[i]->getAccountNo() == account){
+            // std::cout<<"deposit to " << this->accounts[i] << std::endl;
+            this->accounts[i]->addToBalance(dep);
             break;
         }
 
     }
+
+
 }
 
 void Person::transfer(std::string from,std::string to){
@@ -87,7 +88,7 @@ void Person::transfer(std::string from,std::string to){
     Account *first;
     Account *second;
 
-    for(int i=0; i<  (sizeof(accounts)/sizeof(*accounts))  ;i++){
+    for(int i=0; i<  getNumAccounts()  ;i++){
          if( this->accounts[i] == NULL){
             // do nothing
         }
