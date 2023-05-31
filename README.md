@@ -9,3 +9,5 @@ Run code with command
 
 Running the ./a.out executable will give an option to run a unit test script or to manually run the program
 while the latter (./a.out < test.txt) will inject a text file into the program to automate the program
+
+<img width="1009" alt="bank" src="https://github.com/dimeji-code/Bank-Account-Management-System/assets/34945097/d207a479-08a6-4f54-99fd-b7685f645db1">
